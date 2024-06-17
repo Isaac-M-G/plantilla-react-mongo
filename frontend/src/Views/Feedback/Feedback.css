@@ -1,0 +1,179 @@
+.feedback-card-container {
+  color: white;
+}
+.feedback-card-container h2 {
+  color: #0d6efd;
+  font-size: 1em;
+}
+/* ---------------------------------------
+--  estrellas
+------------------------------------------ */
+.star-container {
+  margin: auto;
+}
+
+.ratingStar:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+}
+
+.ratingStar:not(:checked) > label {
+  float: right;
+  cursor: pointer;
+  font-size: 30px;
+  color: #666;
+}
+
+.ratingStar:not(:checked) > label:before {
+  content: "★";
+}
+
+.ratingStar > input:checked + label:hover,
+.ratingStar > input:checked + label:hover ~ label,
+.ratingStar > input:checked ~ label:hover,
+.ratingStar > input:checked ~ label:hover ~ label,
+.ratingStar > label:hover ~ input:checked ~ label {
+  color: #e58e09;
+}
+
+.ratingStar:not(:checked) > label:hover,
+.ratingStar:not(:checked) > label:hover ~ label {
+  color: #ff9e0b;
+}
+
+.ratingStar > input:checked ~ label {
+  color: #ffa723;
+}
+
+.star-color {
+  color: #ffa723;
+}
+
+/* ---------------------------------------
+--  form global
+------------------------------------------ */
+.personalized-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 25px;
+  background-color: #171717;
+  border-radius: 25px;
+  transition: 0.4s;
+}
+
+.personalized-card {
+  background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+  border-radius: 20px;
+  transition: all 0.3s;
+  max-width: 90%;
+  margin: auto;
+}
+
+.personalized-card2 {
+  border-radius: 0;
+}
+
+.personalized-card2:hover {
+  padding: 5px;
+}
+
+.personalized-card:hover {
+  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
+}
+
+.personalized-heading {
+  text-align: center;
+  margin: 2em;
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+}
+
+.personalized-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  border-radius: 25px;
+  padding: 0.6em;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: #171717;
+  box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+}
+
+.personalized-input-icon {
+  height: 1.3em;
+  width: 1.3em;
+  fill: white;
+}
+
+.personalized-input-field {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  color: #d3d3d3;
+}
+
+.personalized-btn {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin-top: 1.5em;
+}
+
+.personalized-button1 {
+  padding: 10px;
+  border-radius: 5px;
+  margin: auto;
+  border: none;
+  background-color: #252525;
+  color: white;
+  max-width: 40%;
+  width: 100px;
+}
+
+.personalized-button1:hover {
+  background-color: blue;
+  color: white;
+}
+
+.personalized-button2 {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #252525;
+  color: white;
+  max-width: 40%;
+  width: 100px;
+  margin: auto;
+}
+
+.personalized-button2:hover {
+  background-color: yellow;
+  color: rgb(5, 5, 5);
+}
+
+.personalized-button3 {
+  padding: 10px;
+  border-radius: 5px;
+  margin: auto;
+  border: none;
+  background-color: red;
+  color: white;
+  max-width: 50%;
+  width: 200px;
+}
+
+.personalized-button3:hover {
+  background-color: rgb(209, 10, 10);
+  color: white;
+}
+
+@media (max-width: 500px) {
+  .personalized-card {
+    max-width: 99%;
+  }
+}

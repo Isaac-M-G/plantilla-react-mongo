@@ -1,0 +1,29 @@
+# Plantilla de Backend
+
+## By
+
+- Isaac Meléndez Gatgens
+
+## Instrucciones para Iniciar la Aplicación
+
+Siga estos pasos para ejecutar la aplicación en su máquina local.
+
+### 1. Instalación de Dependencias
+
+Primero, navegue hasta el directorio del proyecto backend y ejecute el siguiente comando para instalar las dependencias necesarias:
+
+```
+npm install
+```
+
+Luego una vez instaladas las dependencias
+
+```
+node index.js
+```
+
+por defecto corre en el puerto:
+
+### http://localhost:8080/
+
+Se debe ejecutar junto con el frontend para que funcione correctamente
