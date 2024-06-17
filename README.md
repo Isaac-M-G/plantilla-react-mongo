@@ -14,7 +14,7 @@
 - Bootstrap
 - Node (Version v20.14.0)
 - Express
-- Mongo
+- MongoDB
 
 ## Instrucciones para Iniciar la Aplicación
 
