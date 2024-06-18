@@ -3,13 +3,18 @@ import "./Feedback.css";
 import {
   selectToBD,
   createToBD,
+  updateToBD,
   deleteByIDToBD,
   urlFeedbackBackend,
   ErrorAlert,
   SuccessAlert,
 } from "../../GlobalVariables";
+
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useForm } from "react-hook-form";
+import { Modal } from "react-bootstrap";
+import FeedbackEdit from "./FeedbackEdit";
 
 function Feedback() {
   // -------------------------------------------------------------------
@@ -21,9 +26,16 @@ function Feedback() {
   // -------------------------------------------------------------------
   // -- Para inputs
   // -------------------------------------------------------------------
+  const {
+    register: inputFeedback,
+    formState: { errors },
+    watch,
+    handleSubmit,
+  } = useForm();
 
-  const [feedbackInput, setFeedbackInput] = useState("");
-  const [ratingInput, setRatingInput] = useState("");
+  const [handleCloseModal, setHandleCloseModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [idFeedback, setIdFeedback] = useState("");
 
   // -------------------------------------------------------------------
   // -- Funciones
@@ -44,31 +56,20 @@ function Feedback() {
     await fetchFeedback();
   };
 
-  const createFeedback = async (event) => {
-    event.preventDefault();
-    if (feedbackInput === "" || ratingInput === "") {
-      setAlert(
-        <ErrorAlert
-          key={uuidv4()}
-          message="Por favor, complete todos los campos"
-        />
-      );
-      return;
-    }
-    setAlert(false);
-    const newData = {
-      feedback: feedbackInput,
-      rating: ratingInput,
-    };
+  const createFeedback = async (newData) => {
     const response = await createToBD(urlFeedbackBackend, newData);
     setAlert(response);
     await fetchFeedback();
   };
 
+  const clickEdit = (id) => {
+    setIdFeedback(id);
+    setShowModal(true);
+  };
+
   const renderStars = (rating) => {
     const maxRating = 5;
     const filledStars = rating > 0 ? Math.floor(rating) : 0;
-    const halfStar = rating % 1 === 0.5 ? 1 : 0;
 
     const stars = [];
     for (let i = 0; i < maxRating; i++) {
@@ -107,10 +108,11 @@ function Feedback() {
       <div>
         <div className="personalized-card">
           <div className="personalized-card2">
-            <form className="personalized-form" onSubmit={createFeedback}>
-              <p id="heading" className="personalized-heading">
-                Comentar
-              </p>
+            <form
+              className="personalized-form"
+              onSubmit={handleSubmit(createFeedback)}
+            >
+              <h2>Comentar</h2>
 
               <div className="star-container">
                 <div className="ratingStar">
@@ -123,7 +125,7 @@ function Feedback() {
                           id={`star${value}`}
                           name="rate"
                           value={value}
-                          onChange={(e) => setRatingInput(e.target.value)}
+                          {...inputFeedback("rating", { required: true })} // Selecciona el rating
                         />
                         <label
                           htmlFor={`star${value}`}
@@ -134,6 +136,12 @@ function Feedback() {
                   })}
                 </div>
               </div>
+              {errors.rating?.type === "required" && (
+                <ErrorAlert
+                  key={uuidv4()}
+                  message="Debe seleccionar una calificación"
+                />
+              )}
 
               <div className="personalized-field">
                 <input
@@ -141,11 +149,27 @@ function Feedback() {
                   type="text"
                   className="personalized-input-field"
                   placeholder="Comentario"
-                  onChange={(e) => setFeedbackInput(e.target.value)}
+                  {...inputFeedback("feedback", {
+                    required: true,
+                    maxLength: 1000,
+                    minLength: 5,
+                  })}
                 />
               </div>
-              <button type="submit" className="personalized-button1">
-                crear
+              {errors.feedback?.type === "minLength" && (
+                <ErrorAlert
+                  key={uuidv4()}
+                  message="El comentario debe tener al menos 5 caracteres"
+                />
+              )}
+              {errors.feedback?.type === "maxLength" && (
+                <ErrorAlert
+                  key={uuidv4()}
+                  message="El comentario debe tener menos de 1000 caracteres"
+                />
+              )}
+              <button type="submit" className="personalized-button-create">
+                Crear
               </button>
             </form>
           </div>
@@ -158,21 +182,46 @@ function Feedback() {
             <div key={feedback._id} className="personalized-card mt-4">
               <div className="personalized-card2">
                 <div className="personalized-form">
-                  <h2>{formatDate(feedback.creationDate)}</h2>
+                  <h2 className="feedback-date">
+                    {formatDate(feedback.creationDate)}
+                  </h2>
                   <p>{renderStars(feedback.rating)}</p>
                   <p>Comentario: {feedback.feedback}</p>
-                  <button
-                    className="personalized-button3"
-                    onClick={() => deleteFeedback(feedback._id)}
-                  >
-                    Borrar
-                  </button>
+
+                  <div className="personalized-btn-container">
+                    <button
+                      className="personalized-button-edit"
+                      onClick={() => clickEdit(feedback._id)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="personalized-button-delete"
+                      onClick={() => deleteFeedback(feedback._id)}
+                    >
+                      Borrar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Editar feedback</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FeedbackEdit
+            idFeedback={idFeedback}
+            fetchFeedback={fetchFeedback}
+            setAlert={setAlert}
+            setShowModal={setShowModal}
+          />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

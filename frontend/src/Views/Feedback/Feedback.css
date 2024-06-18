@@ -1,10 +1,12 @@
 .feedback-card-container {
   color: white;
 }
-.feedback-card-container h2 {
+
+.feedback-date {
   color: #0d6efd;
   font-size: 1em;
 }
+
 /* ---------------------------------------
 --  estrellas
 ------------------------------------------ */
@@ -82,7 +84,7 @@
   box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
 }
 
-.personalized-heading {
+.personalized-form h2 {
   text-align: center;
   margin: 2em;
   color: rgb(255, 255, 255);
@@ -117,46 +119,47 @@
   color: #d3d3d3;
 }
 
-.personalized-btn {
+.personalized-btn-container {
   display: flex;
   justify-content: center;
   flex-direction: row;
-  margin-top: 1.5em;
+  max-width: 500px;
+  margin: 1.5em auto 1.5em auto; /* top right bottom left */
 }
 
-.personalized-button1 {
+.personalized-button-create {
   padding: 10px;
   border-radius: 5px;
   margin: auto;
   border: none;
-  background-color: #252525;
-  color: white;
-  max-width: 40%;
-  width: 100px;
-}
-
-.personalized-button1:hover {
   background-color: blue;
   color: white;
+  max-width: 40%;
+  width: 100px;
 }
 
-.personalized-button2 {
+.personalized-button-create:hover {
+  background-color: rgb(20, 20, 211);
+  color: black;
+}
+
+.personalized-button-edit {
   padding: 10px;
   border-radius: 5px;
   border: none;
-  background-color: #252525;
+  background-color: #28880b;
   color: white;
   max-width: 40%;
   width: 100px;
   margin: auto;
 }
 
-.personalized-button2:hover {
-  background-color: yellow;
-  color: rgb(5, 5, 5);
+.personalized-button-edit:hover {
+  background-color: #3dc414;
+  color: black;
 }
 
-.personalized-button3 {
+.personalized-button-delete {
   padding: 10px;
   border-radius: 5px;
   margin: auto;
@@ -167,9 +170,9 @@
   width: 200px;
 }
 
-.personalized-button3:hover {
+.personalized-button-delete:hover {
   background-color: rgb(209, 10, 10);
-  color: white;
+  color: black;
 }
 
 @media (max-width: 500px) {

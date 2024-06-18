@@ -59,4 +59,32 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+  const newData = req.body;
+  const { error } = validateFeedback(newData); // Validamos el comentario
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    const comentario = await Feedback.findByIdAndUpdate(id, newData, {
+      new: true,
+    }); // Buscamos y actualizamos el comentario
+    if (!comentario) {
+      return res.status(404).json({ error: "Comentario no encontrado" });
+    }
+    res.json(comentario); // Devolvemos el comentario actualizado como JSON
+  } catch (error) {
+    console.error("Error al actualizar comentario en MongoDB:", error);
+    res
+      .status(500)
+      .json({ error: "Error al actualizar comentario en MongoDB" });
+  }
+});
+
 module.exports = router;
