@@ -5,15 +5,13 @@ import {
   createToBD,
   deleteByIDToBD,
   urlFeedbackBackend,
-  ErrorAlert,
-  SuccessAlert,
 } from "../../GlobalVariables";
 
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useForm } from "react-hook-form";
 import { Modal } from "react-bootstrap";
 import FeedbackEdit from "./FeedbackEdit";
+import FeedbackForm from "./FeedbackForm";
 
 function Feedback() {
   // -------------------------------------------------------------------
@@ -33,7 +31,7 @@ function Feedback() {
   } = useForm();
 
   const [showModal, setShowModal] = useState(false);
-  const [idFeedback, setIdFeedback] = useState("");
+  const [InfoFeedback, setInfoFeedback] = useState("");
 
   // -------------------------------------------------------------------
   // -- Funciones
@@ -74,10 +72,10 @@ function Feedback() {
 
   /**
    * Función que abre el modal para editar un feedback
-   * @param {string} id
+   * @param {Object} FeedbackInfo - Objeto con la información del feedback a editar
    */
-  const clickEdit = (id) => {
-    setIdFeedback(id);
+  const clickEdit = (FeedbackInfo) => {
+    setInfoFeedback(FeedbackInfo);
     setShowModal(true);
   };
 
@@ -138,77 +136,14 @@ function Feedback() {
 
       <h1>Feedback</h1>
 
-      <div>
-        <div className="personalized-card">
-          <div className="personalized-card2">
-            <form
-              className="personalized-form"
-              onSubmit={handleSubmit(createFeedback)}
-            >
-              <h2>Comentar</h2>
-
-              <div className="star-container">
-                <div className="ratingStar">
-                  {[...Array(5)].map((_, index) => {
-                    const value = 5 - index; // Valor del rating, comenzando desde 5 y decrementando
-                    return (
-                      <React.Fragment key={value}>
-                        <input
-                          type="radio"
-                          id={`star${value}`}
-                          name="rate"
-                          value={value}
-                          {...inputFeedback("rating", { required: true })} // Selecciona el rating
-                        />
-                        <label
-                          htmlFor={`star${value}`}
-                          title={`Rating ${value}`}
-                        ></label>
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-              </div>
-              {errors.rating?.type === "required" && (
-                <ErrorAlert
-                  key={uuidv4()}
-                  message="Debe seleccionar una calificación"
-                />
-              )}
-
-              <div className="personalized-field">
-                <input
-                  required
-                  type="text"
-                  className="personalized-input-field"
-                  placeholder="Comentario"
-                  {...inputFeedback("feedback", {
-                    required: true,
-                    maxLength: 1000,
-                    minLength: 5,
-                  })}
-                />
-              </div>
-              {errors.feedback?.type === "minLength" && (
-                <ErrorAlert
-                  key={uuidv4()}
-                  message="El comentario debe tener al menos 5 caracteres"
-                />
-              )}
-              {errors.feedback?.type === "maxLength" && (
-                <ErrorAlert
-                  key={uuidv4()}
-                  message="El comentario debe tener menos de 1000 caracteres"
-                />
-              )}
-              <button
-                type="submit"
-                className="personalized-button-create mt-4 mb-4"
-              >
-                Crear
-              </button>
-            </form>
-          </div>
+      <div className="personalized-card">
+        <div className="personalized-card2">
+          <FeedbackForm
+            handleSubmit={handleSubmit}
+            createFeedback={createFeedback}
+            inputFeedback={inputFeedback}
+            errors={errors}
+          />
         </div>
       </div>
 
@@ -227,7 +162,7 @@ function Feedback() {
                   <div className="personalized-btn-container">
                     <button
                       className="personalized-button-edit"
-                      onClick={() => clickEdit(feedback._id)}
+                      onClick={() => clickEdit(feedback)}
                     >
                       Editar
                     </button>
@@ -251,11 +186,11 @@ function Feedback() {
         </Modal.Header>
         <Modal.Body className="custom-modal">
           <FeedbackEdit
-            idFeedback={idFeedback}
+            idFeedback={InfoFeedback?._id}
             fetchFeedback={fetchFeedback}
             setAlert={setAlert}
             setShowModal={setShowModal}
-            handleCloseModal={handleCloseModal}
+            infoFeedback={InfoFeedback}
           />
         </Modal.Body>
       </Modal>

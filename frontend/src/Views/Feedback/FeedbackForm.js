@@ -1,41 +1,13 @@
 import React from "react";
-import { updateToBD, urlFeedbackBackend } from "../../GlobalVariables";
-import { useForm } from "react-hook-form";
 import { ErrorAlert } from "../../GlobalVariables";
 import { v4 as uuidv4 } from "uuid";
 
-const FeedbackEdit = ({
-  idFeedback,
-  setAlert,
-  fetchFeedback,
-  setShowModal,
-  handleCloseModal,
-  infoFeedback,
-}) => {
-  // -------------------------------------------------------------------
-  // -- Para inputs
-  // -------------------------------------------------------------------
-  const {
-    register: inputFeedback,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
-
-  // -------------------------------------------------------------------
-  // -- Funciones
-  // -------------------------------------------------------------------
-  const updateFeedback = async (newData) => {
-    const response = await updateToBD(urlFeedbackBackend, idFeedback, newData);
-    setAlert(response);
-    await fetchFeedback();
-    setShowModal(false);
-  };
-
+function FeedbackForm({ handleSubmit, createFeedback, inputFeedback, errors }) {
   return (
     <div>
       <form
         className="personalized-form"
-        onSubmit={handleSubmit(updateFeedback)}
+        onSubmit={handleSubmit(createFeedback)}
       >
         <h2>Comentar</h2>
 
@@ -76,7 +48,6 @@ const FeedbackEdit = ({
             type="text"
             className="personalized-input-field"
             placeholder="Comentario"
-            defaultValue={infoFeedback?.feedback || ""} // Utilizamos el valor de infoFeedback.feedback como defaultValue
             {...inputFeedback("feedback", {
               required: true,
               maxLength: 1000,
@@ -96,24 +67,12 @@ const FeedbackEdit = ({
             message="El comentario debe tener menos de 1000 caracteres"
           />
         )}
-
-        <div className="personalized-btn-container">
-          <button
-            type="submit"
-            className="personalized-button-create mt-4 mb-4"
-          >
-            Crear
-          </button>
-          <button
-            className="personalized-button-delete"
-            onClick={handleCloseModal}
-          >
-            Cancelar
-          </button>
-        </div>
+        <button type="submit" className="personalized-button-create mt-4 mb-4">
+          Crear
+        </button>
       </form>
     </div>
   );
-};
+}
 
-export default FeedbackEdit;
+export default FeedbackForm;
