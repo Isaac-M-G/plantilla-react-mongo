@@ -3,7 +3,6 @@ import "./Feedback.css";
 import {
   selectToBD,
   createToBD,
-  updateToBD,
   deleteByIDToBD,
   urlFeedbackBackend,
   ErrorAlert,
@@ -33,7 +32,6 @@ function Feedback() {
     handleSubmit,
   } = useForm();
 
-  const [handleCloseModal, setHandleCloseModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [idFeedback, setIdFeedback] = useState("");
 
@@ -45,28 +43,57 @@ function Feedback() {
     fetchFeedback();
   }, []);
 
+  /**
+   * Función que obtiene los feedbacks de la base de datos
+   * y los guarda en el estado feedbacktoDisplay
+   */
   const fetchFeedback = async () => {
     const response = await selectToBD(urlFeedbackBackend);
     setFeedbacktoDisplay(response);
   };
 
+  /**
+   * Función que elimina un feedback de la base de datos
+   * @param {string} id - id del feedback a borrar
+   */
   const deleteFeedback = async (id) => {
     const response = await deleteByIDToBD(urlFeedbackBackend, id);
     setAlert(response);
     await fetchFeedback();
   };
 
+  /**
+   * Función que crea un nuevo feedback en la base de datos
+   * @param {Object} newData - Objeto con los datos del nuevo feedback
+   */
   const createFeedback = async (newData) => {
     const response = await createToBD(urlFeedbackBackend, newData);
     setAlert(response);
     await fetchFeedback();
   };
 
+  /**
+   * Función que abre el modal para editar un feedback
+   * @param {string} id
+   */
   const clickEdit = (id) => {
     setIdFeedback(id);
     setShowModal(true);
   };
 
+  /**
+   * Función que cierra el modal
+   * @param {boolean} handleCloseModal
+   */
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  /**
+   * Función que renderiza las estrellas de acuerdo a la calificación
+   * @param {number} rating
+   * @returns {Array} - Array con las estrellas
+   */
   const renderStars = (rating) => {
     const maxRating = 5;
     const filledStars = rating > 0 ? Math.floor(rating) : 0;
@@ -90,6 +117,11 @@ function Feedback() {
     return stars;
   };
 
+  /**
+   * Función que formatea la fecha en formato dd/mm/yyyy
+   * @param {string} dateString
+   * @returns {string} - Fecha formateada
+   */
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, "0");
@@ -101,6 +133,7 @@ function Feedback() {
 
   return (
     <div>
+      {/* Aquí se muestra el alert  en la parte superior si hubiera alguna */}
       <span className="alerts-position-top">{alert}</span>
 
       <h1>Feedback</h1>
@@ -168,7 +201,10 @@ function Feedback() {
                   message="El comentario debe tener menos de 1000 caracteres"
                 />
               )}
-              <button type="submit" className="personalized-button-create">
+              <button
+                type="submit"
+                className="personalized-button-create mt-4 mb-4"
+              >
                 Crear
               </button>
             </form>
@@ -182,9 +218,9 @@ function Feedback() {
             <div key={feedback._id} className="personalized-card mt-4">
               <div className="personalized-card2">
                 <div className="personalized-form">
-                  <h2 className="feedback-date">
-                    {formatDate(feedback.creationDate)}
-                  </h2>
+                  <span className="feedback-date">
+                    <h2>{formatDate(feedback.creationDate)}</h2>
+                  </span>
                   <p>{renderStars(feedback.rating)}</p>
                   <p>Comentario: {feedback.feedback}</p>
 
@@ -210,15 +246,16 @@ function Feedback() {
       </div>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header className="custom-modal" closeButton>
           <Modal.Title>Editar feedback</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="custom-modal">
           <FeedbackEdit
             idFeedback={idFeedback}
             fetchFeedback={fetchFeedback}
             setAlert={setAlert}
             setShowModal={setShowModal}
+            handleCloseModal={handleCloseModal}
           />
         </Modal.Body>
       </Modal>
